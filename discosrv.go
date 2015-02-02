@@ -2,10 +2,11 @@
 // All rights reserved. Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file.
 
-package main
+package discosrv
 
 import (
 	"bytes"
+	"common"
 	"encoding/binary"
 	"flag"
 	"fmt"
@@ -20,6 +21,7 @@ import (
 	"github.com/golang/groupcache/lru"
 	"github.com/juju/ratelimit"
 	"github.com/syncthing/syncthing/discover"
+	"github.com/syncthing/syncthing/logger"
 	"github.com/syncthing/syncthing/protocol"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
@@ -41,7 +43,7 @@ var (
 	limiter    *lru.Cache
 )
 
-func main() {
+func Start(l *logger.Logger) {
 	var listen string
 	var timestamp bool
 	var statsIntv int
@@ -60,6 +62,8 @@ func main() {
 	flag.IntVar(&limitBurst, "limit-burst", limitBurst, "Allowed burst size, packets")
 	flag.StringVar(&dbDir, "db-dir", "/var/discosrv/db", "Database directory")
 	flag.Parse()
+
+	l.Infof(common.VtrackerPrefix, "Discovery server started\n")
 
 	limiter = lru.New(lruSize)
 
