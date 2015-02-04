@@ -43,7 +43,7 @@ var (
 	limiter    *lru.Cache
 )
 
-func Start(l *logger.Logger) {
+func Start(dir string, l *logger.Logger) {
 	var listen string
 	var timestamp bool
 	var statsIntv int
@@ -55,13 +55,15 @@ func Start(l *logger.Logger) {
 	flag.BoolVar(&debug, "debug", false, "Enable debug output")
 	flag.BoolVar(&timestamp, "timestamp", true, "Timestamp the log output")
 	flag.IntVar(&statsIntv, "stats-intv", 0, "Statistics output interval (s)")
-	flag.StringVar(&statsFile, "stats-file", "/var/discosrv/stats", "Statistics file name")
+	//flag.StringVar(&statsFile, "stats-file", "/var/discosrv/stats", "Statistics file name")
 	flag.StringVar(&unknownFile, "unknown-file", "", "Unknown packet log file name")
 	flag.IntVar(&lruSize, "limit-cache", lruSize, "Limiter cache entries")
 	flag.IntVar(&limitAvg, "limit-avg", limitAvg, "Allowed average package rate, per 10 s")
 	flag.IntVar(&limitBurst, "limit-burst", limitBurst, "Allowed burst size, packets")
-	flag.StringVar(&dbDir, "db-dir", "/var/discosrv/db", "Database directory")
+	// flag.StringVar(&dbDir, "db-dir", "/var/discosrv/db", "Database directory")
 	flag.Parse()
+	dbDir = dir + "db"
+	statsFile = dir + "stats"
 
 	l.Infof(common.VtrackerPrefix, "Discovery server started\n")
 
